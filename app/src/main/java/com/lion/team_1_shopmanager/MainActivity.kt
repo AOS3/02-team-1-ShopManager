@@ -13,6 +13,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.google.android.material.chip.Chip
 import com.google.android.material.transition.MaterialSharedAxis
+import com.lion.a07_studentmanager.fragment.LoginFragment
+import com.lion.a07_studentmanager.fragment.SettingPasswordFragment
 import com.lion.team_1_shopmanager.databinding.ActivityMainBinding
 import com.lion.team_1_shopmanager.databinding.HeaderMainBinding
 import com.lion.team_1_shopmanager.fragment.HomeFragment
@@ -34,8 +36,17 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // 초기화면 홈화면으로 설정
-        replaceFragment(FragmentName.HOME_FRAGMENT, false, false, null)
+        // 초기화면 설정
+        // Preferences 객체를 가져온다.
+        val managerPef = getSharedPreferences("manager", MODE_PRIVATE)
+        // 저장되어 있는 비밀번호를 가져온다.
+        val managerPassword = managerPef.getString("password", null)
+        // 저장되어 있는 비밀번호가 없다면..
+        if(managerPassword == null){
+            replaceFragment(FragmentName.SETTING_PASSWORD_FRAGMENT, false, false, null)
+        } else {
+            replaceFragment(FragmentName.LOGIN_FRAGMENT, false, false, null)
+        }
 
         // 네비게이션 뷰 구성
         settingNavigationView()
@@ -93,6 +104,10 @@ class MainActivity : AppCompatActivity() {
             FragmentName.INPUT_FRAGMENT -> InputFragment()
             // 옷 정보 수정 화면
             FragmentName.MODIFY_FRAGMENT -> ModifyFragment()
+
+            FragmentName.LOGIN_FRAGMENT -> LoginFragment()
+
+            FragmentName.SETTING_PASSWORD_FRAGMENT -> SettingPasswordFragment()
         }
 
         // bundle 객체가 null이 아니라면
@@ -175,7 +190,13 @@ class MainActivity : AppCompatActivity() {
         INPUT_FRAGMENT(4, "InputFragment"),
 
         // 옷 정보 수정 화면
-        MODIFY_FRAGMENT(5, "ModifyFragment")
+        MODIFY_FRAGMENT(5, "ModifyFragment"),
+
+        // 로그인 화면
+        LOGIN_FRAGMENT(1, "LoginFragment"),
+
+        // 관리자 비밀번호 설정화면
+        SETTING_PASSWORD_FRAGMENT(2, "SettingPasswordFragment")
 
     }
 }
